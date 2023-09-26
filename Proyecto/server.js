@@ -21,34 +21,27 @@ app.get('/api/users/:id', async(req, res) => {
     const { id } = req.params
     try {
         const user = await manager.getUserById(+id)
+        console.log(users);
         if (!user) {
-            res.status(404).json({message: "User not found whit id provided"})
+            return res
+                .status(404)
+                .json({message: "User not found whit id provided"})
         }
         res.status(200).json({message:'User found: ', user})
     } catch (error) {
+        console.log(error.message);
         res.status(500).json({message:error.message})
     }
     
 })
 
-// /api/character => buscar todos los personales o crear un personaje
-
-app.get('/api', (req,res) => {
-    res.send('Probando API')
-})
-
-app.get('/api/user', (req,res) => {
-    res.send('Probando USER')
-})
-
-app.listen(8080, () => {
-    console.log('Escuchando al puerto 8080');
-})
-
-app.post("/api/users", async (res, req) => {
+app.post("/api/users", async (req, res) => {
+    console.log(req.body);
+    //Validar los campos obligatorios
     const { first_name, course, password } = req.body
     if (!first_name || !course || !password) {
-        return res.status(400).json({ message: "Some data is missing" })
+        return res.status(400)
+            .json({ message: "Some data is missing" })
     } 
     try {
         const response = await manager.createUser(req.body)
@@ -59,15 +52,37 @@ app.post("/api/users", async (res, req) => {
 })
 
 app.delete("/api/users/:idUser", async (req, res) => {
-    const { idUSer } = req.params
-
+    const { idUser } = req.params
     try {
-        const users = await this.getUsers({});
-        const user = users.find(u => u.id === id)
-        if (user) {
-            //const newArrayUsers = users.filter((u) => )
+        const response = await manager.deleteUser(+idUser)
+        if (!response) {
+            console.log('response', response);
+            return res 
+                .status(404)
+                .json({ message: "User not found with the id provided" })
         }
-    } catch (cons) {
-        
+        res.status(200).json({ message: "User deleted"});
+    } catch (error) {
+        res.status(500).json({ message: error.message})
     }
-})
+});
+
+app.put("/api/users/:idUser", async(req, res) => {
+    const { idUser } = req.params
+    try {
+        const response = await manager.updateUser(+idUser, req.body);
+        console.log('response ', response);
+        if (!response) {
+            return res
+                .status(404)
+                .json({ message: "User not found with the id provided" });
+        }
+        res.status(200).json({ message: "User updated" })
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    } 
+});
+
+app.listen(8080, () => {
+    console.log('Escuchando al puerto 8080');
+});

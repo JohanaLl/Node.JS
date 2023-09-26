@@ -1,4 +1,3 @@
-// const fs = require('fs')
 import { createHash } from 'crypto';
 import fs from 'fs'
 
@@ -7,10 +6,16 @@ const path = 'Users.json'
 class UsersManager {
 
     async getUsers(queryObj) {
-        console.log("queryObj", queryObj);
-        //Destructuring los queries
-        const { limit } = queryObj
+        console.log('queryObj ', queryObj);
+                        //Destructuring los queries de la URL
+                const { limit } = queryObj
         try {
+            // if (queryObj) {
+            //     //Destructuring los queries de la URL
+            //     const { limit } = queryObj
+            // } else {
+            //     throw new Error('Debe agregar un parametro!');
+            // }
             if(fs.existsSync(path))
             {
                 //1. Leer el archivo
@@ -18,7 +23,9 @@ class UsersManager {
                 const userData = JSON.parse(usersFile);
                 //2. retornar el objeto/array js
                 //Retorna el limite que le llegó por propiedades
-                return limit ? userData.slice(0, limit) : userData
+                //slice permite quedarse con una porción del array 
+                //Va de un elemento a otro sin incluirlo
+                return limit ? userData.slice(0, +limit) : userData
             } else {
                 return []
             }
@@ -52,7 +59,8 @@ class UsersManager {
 
     async getUserById(id) {
         try {
-            const users = await this.getUsers({})
+            const users = await this.getUsers()
+            console.log('users ', users);
             const user = users.find(u => u.id === id)
             if (!user) {
                 return 'No user'
@@ -60,6 +68,7 @@ class UsersManager {
                 return user
             }
         } catch (error) {
+            console.log(error);
             return error
         }
     }
@@ -70,67 +79,92 @@ class UsersManager {
             const users = await this.getUsers({})
             //con filter() se crea un nuevo arreglo con todos los usuarios 
             //menos el que coincida con el id
-            const newArrayUsers = users.filter(u => u.id !== id) 
-            //sobreescribir el nuevo arreglo 
-            await fs.promises.writeFile(path, JSON.stringify(newArrayUsers))
+            const user = users.find(u => u.id === id)
+            if (user) {
+                const newArrayUsers = users.filter(u => u.id !== id) 
+                //sobreescribir el nuevo arreglo 
+                await fs.promises.writeFile(path, JSON.stringify(newArrayUsers))
+            }
+            return user
         } catch (error) {
             return error
         }
     }
 
+    async updateUser(id, obj) {
+        try {
+            const users = await this.getUsers({});
+            const index = users.findIndex((u) => u.id === id);
+            if (index === -1) {
+              return null;
+            }
+            const updateUser = { ...users[index], ...obj };
+            users.splice(index, 1, updateUser);
+            await fs.promises.writeFile(path, JSON.stringify(users));
+            return updateUser;
+        } catch (error) {
+            return error;
+        }
+    }
+
 }
 
-//Prueba
+// PROBANDO LOS METODOS
 
 const user1 = {
-    first_name: 'Juan',
-    last_name: 'Hoyos',
+    first_name: "Juan",
+    last_name: "Hoyos",
     age: 40,
-    course: 'JAVASCRIPT'
-}
-
-const user2 = {
-    first_name: 'Luis',
-    last_name: 'Abello',
+    course: "JAVASCRIPT",
+    password: "12345",
+  };
+  
+  const user2 = {
+    first_name: "Luis",
+    last_name: "Abello",
     age: 35,
-    course: 'BACKEND'
-}
-
-const user3 = {
-    first_name: 'Leidy',
-    last_name: 'Llanos',
-    age: 30,
-    course: 'BACKEND'
-}
-
-const user4 = {
-    first_name: 'Johana',
-    last_name: 'Llanos',
-    age: 25,
-    course: 'BACKEND'
-}
-
-const user5 = {
-    first_name: 'Angie',
-    last_name: 'Serrano',
-    age: 28,
-    course: 'BACKEND'
-}
+    course: "BACKEND",
+    password: "abcde",
+  };
+  
+  const user3 = {
+    first_name: "Carlos",
+    last_name: "Abello",
+    age: 35,
+    course: "BACKEND",
+    password: "abcde",
+  };
+  
+  const user4 = {
+    first_name: "Laura",
+    last_name: "Abello",
+    age: 35,
+    course: "BACKEND",
+    password: "abcde",
+  };
+  
+  const user5 = {
+    first_name: "Camila",
+    last_name: "Abello",
+    age: 35,
+    course: "BACKEND",
+    password: "abcde",
+  };
 
 // async function test() {
-//     const manager1 = new UsersManager()
-//     await manager1.createUser(user1)
-//     await manager1.createUser(user2)
-//     await manager1.createUser(user3)
-//     await manager1.createUser(user4)
-//     await manager1.createUser(user5)
-//     const users = await manager1.getUsers()
-//     console.log(users);
-//     await manager1.deleteUser(1)
+//   const manager = new UsersManager();
+//   await manager.createUser(user1);
+//   await manager.createUser(user2);
+//   await manager.createUser(user3);
+//   await manager.createUser(user4);
+//   await manager.createUser(user5);
+// //   const users = await manager.getUsers()
+//   //console.log(users);
+//   //await manager.deleteUser(1)
 // }
 
 // test()
-
+//Con este nombre se deben llamar todos los metodos de esta clase (manager)
 export const manager = new UsersManager()
 
 /**
