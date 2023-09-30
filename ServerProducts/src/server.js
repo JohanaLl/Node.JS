@@ -57,7 +57,7 @@ app.delete("/api/products/:idProduct", async (req, res) => {
     }
 });
 
-//Actualizar un producto
+//Update a producto
 app.put("/api/products/:idProduct", async (req, res) => {
     const { idProduct } = req.params;
     try {

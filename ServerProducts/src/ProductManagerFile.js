@@ -4,7 +4,7 @@ const path = 'Products.json'
 
 class ProductManager {
 //No se usa fs. porque se importó promises de fs 
-    async getProducts(queryObj) {
+    async getProducts(queryObj = {}) {
         const { limit } = queryObj;
         try {
             if (existsSync(path)) {
@@ -15,13 +15,13 @@ class ProductManager {
                 return []
             }
         } catch (error) {
-            return error
+            throw new Error(error.message);
         }
     }
 
     async addProduct(product) {
         try {
-            const products = await this.getProducts({})
+            const products = await this.getProducts()
             let id
             //Incrementar el id
             !products.length ? id = 1 : id = products[products.length-1].id + 1
@@ -31,13 +31,13 @@ class ProductManager {
             await promises.writeFile(path, JSON.stringify(products))
             return newProduct
         } catch (error) {
-            return error
+            throw new Error(error.message);
         }
     }
 
     async getProductById(id) {
         try {
-            const products = await this.getProducts({})
+            const products = await this.getProducts()
             const product = products.find(product => product.id === id)
             if (!product) {
                 return 'No product'
@@ -45,14 +45,14 @@ class ProductManager {
                 return product;
             }
         } catch (error) {
-            return error;
+            throw new Error(error.message);
         }
     }
 
     async updateProduct(id, obj) {
         try {
-            const products = await this.getProducts({})
-            const index = products.findIndex(producto => producto.id === id)
+            const products = await this.getProducts()
+            const index = products.findIndex(producto => producto.id === id)    
             if (index === -1) 
                 return null
 
@@ -62,13 +62,13 @@ class ProductManager {
             return updateProduct;
 
         } catch (error) {
-            return error
+            throw new Error(error.message);
         }
     }
 
     async deleteProduct(id) {
         try {
-            const products = await this.getProducts({})
+            const products = await this.getProducts()
             const product = products.find(product => product.id === id)
             if (product) {
                 const newArrProducts = products.filter(product => product.id !== id)
@@ -76,7 +76,7 @@ class ProductManager {
             }
             return product;
         } catch (error) {
-            return error;
+            throw new Error(error.message); 
         }
     }
 
