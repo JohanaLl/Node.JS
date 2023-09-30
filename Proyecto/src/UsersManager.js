@@ -6,10 +6,17 @@ const path = 'Users.json'
 class UsersManager {
 
     async getUsers(queryObj) {
+<<<<<<< HEAD:Proyecto/src/UsersManager.js
         console.log('queryObj ', queryObj);
                 //Destructuring los queries de la URL
                 const { limit } = queryObj
         try {
+=======
+        //Destructuring los queries de la URL
+        const { limit } = queryObj
+        try {
+
+>>>>>>> b4488130adc470e15dfc3e0efbd0d3f0fba98ab3:Proyecto/UserManager.js
             if(fs.existsSync(path))
             {
                 //1. Leer el archivo
@@ -53,7 +60,7 @@ class UsersManager {
 
     async getUserById(id) {
         try {
-            const users = await this.getUsers()
+            const users = await this.getUsers({})
             console.log('users ', users);
             const user = users.find(u => u.id === id)
             if (!user) {
@@ -62,7 +69,6 @@ class UsersManager {
                 return user
             }
         } catch (error) {
-            console.log(error);
             return error
         }
     }
