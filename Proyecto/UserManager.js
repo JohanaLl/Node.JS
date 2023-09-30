@@ -6,16 +6,10 @@ const path = 'Users.json'
 class UsersManager {
 
     async getUsers(queryObj) {
-        console.log('queryObj ', queryObj);
-                        //Destructuring los queries de la URL
-                const { limit } = queryObj
+        //Destructuring los queries de la URL
+        const { limit } = queryObj
         try {
-            // if (queryObj) {
-            //     //Destructuring los queries de la URL
-            //     const { limit } = queryObj
-            // } else {
-            //     throw new Error('Debe agregar un parametro!');
-            // }
+
             if(fs.existsSync(path))
             {
                 //1. Leer el archivo
@@ -59,7 +53,7 @@ class UsersManager {
 
     async getUserById(id) {
         try {
-            const users = await this.getUsers()
+            const users = await this.getUsers({})
             console.log('users ', users);
             const user = users.find(u => u.id === id)
             if (!user) {
@@ -68,7 +62,6 @@ class UsersManager {
                 return user
             }
         } catch (error) {
-            console.log(error);
             return error
         }
     }

@@ -67,7 +67,7 @@ function agregarFamiliar(idUsuario, infoFamiliar) {
     })
 }
 
-// .THEN .CATCH
+// .THEN .CATCH  -- Promesas
 function agregarFamiliarProm(idUsuario, infoFamiliar) {
     usuarios.findById(idUsuario) //1
     .then(usuario => {
@@ -87,7 +87,6 @@ function agregarFamiliarProm(idUsuario, infoFamiliar) {
 }
 
 // async await
-
 async function agregarFamiliarAsync(idUsuario, infoFamiliar) {
     try {
         const usuario = await usuarios.findById(idUsuario)

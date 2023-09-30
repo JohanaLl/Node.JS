@@ -19,26 +19,14 @@ class ProductManager {
 
     async addProduct(product) {
         try {
-            console.log('add');
             const products = await this.getProducts()
             let id
-            //Verificar que el código no se repita
-            // const isCodeRepeat = products.some(product => product.code === code)
-            // console.log('isCodeRepeat: ', isCodeRepeat);
-            // if (isCodeRepeat) { 
-            //     console.log('Code alrteady used') 
-            //     return
-            // }
-            //Verificar los campos obligatorios
-            // if (!title || !price || !stock || !code) {
-            //     console.log('Some data is missing')
-            //     return
-            // }
             //Incrementar el id
             !products.length ? id = 1 : id = products[products.length-1].id + 1
             
             products.push({id, ...product})
             await fs.promises.writeFile(path, JSON.stringify(products))
+            return products
         } catch (error) {
             return error
         }
@@ -58,24 +46,17 @@ class ProductManager {
         }
     }
 
-    async updateProduct(id, pro) {
+    async updateProduct(id, obj) {
         try {
             const products = await this.getProducts()
             const index = products.findIndex(producto => producto.id === id)
-            console.log('index ', index);
-            products[index] = {
-                ...products[index],
-                ...pro
+            if (index === -1) {
+                return null
             }
-            console.log('actualizado ', products[index]);
-            // console.log(products);
-            await fs.promises.writeFile(path, JSON.stringify(products[index]))
-            // const newArrProducts = product.map(function(product) {
-            //     console.log('map');
-            //     let productModified = {...pro}
-            //     console.log(productModified, '  productModified');
-            //     return productModified
-            // })
+            const updateProduct = { ...products[index], obj}
+            products.splice(index, 1, updateProduct);
+            await fs.promises.writeFile(path, JSON.stringify(products))
+            return updateProduct;
 
         } catch (error) {
             return error
@@ -85,8 +66,12 @@ class ProductManager {
     async deleteProduct(id) {
         try {
             const products = await this.getProducts()
-            const newArrProducts = products.filter(product => product.id !== id)
-            await fs.promises.writeFile(path, JSON.stringify(newArrProducts))
+            const product = products.find(product => product.id === id)
+            if (product) {
+                const newArrProducts = products.filter(product => product.id !== id)
+                await fs.promises.writeFile(path, JSON.stringify(newArrProducts))
+            }
+            return product
         } catch (error) {
             return error
         }
