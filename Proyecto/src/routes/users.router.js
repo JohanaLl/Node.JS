@@ -1,12 +1,9 @@
-import express from 'express'
-import { manager } from './UserManager.js'
+import { Router } from 'express';
+import { manager } from '../UsersManager.js';
 
-const app = express()
-//Metodo que entiende la información que llega por el body
-app.use(express.json())
+const router = Router();
 
-// req => params - query - body
-app.get('/api/users', async (req,res) => {
+router.get('/', async (req,res) => {
     try {
         const users = await manager.getUsers(req.query)
         res.status(200).json({message:'Users found: ', users})
@@ -16,7 +13,7 @@ app.get('/api/users', async (req,res) => {
 
 })
 
-app.get('/api/users/:id', async(req, res) => {
+router.get('/:id', async(req, res) => {
     //Destructuring req
     const { id } = req.params
     try {
@@ -35,7 +32,7 @@ app.get('/api/users/:id', async(req, res) => {
     
 })
 
-app.post("/api/users", async (req, res) => {
+router.post("/", async (req, res) => {
     console.log(req.body);
     //Validar los campos obligatorios
     const { first_name, course, password } = req.body
@@ -51,7 +48,7 @@ app.post("/api/users", async (req, res) => {
     }
 })
 
-app.delete("/api/users/:idUser", async (req, res) => {
+router.delete("/:idUser", async (req, res) => {
     const { idUser } = req.params
     try {
         const response = await manager.deleteUser(+idUser)
@@ -67,7 +64,7 @@ app.delete("/api/users/:idUser", async (req, res) => {
     }
 });
 
-app.put("/api/users/:idUser", async(req, res) => {
+router.put("/:idUser", async(req, res) => {
     const { idUser } = req.params
     try {
         const response = await manager.updateUser(+idUser, req.body);
@@ -83,6 +80,6 @@ app.put("/api/users/:idUser", async(req, res) => {
     } 
 });
 
-app.listen(8080, () => {
-    console.log('Escuchando al puerto 8080');
-});
+//Siempre que se exporte algo por default
+//donde se importe se le puede dar el nombre que uno quiera
+export default router;

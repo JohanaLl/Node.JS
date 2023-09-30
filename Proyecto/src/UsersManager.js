@@ -7,15 +7,9 @@ class UsersManager {
 
     async getUsers(queryObj) {
         console.log('queryObj ', queryObj);
-                        //Destructuring los queries de la URL
+                //Destructuring los queries de la URL
                 const { limit } = queryObj
         try {
-            // if (queryObj) {
-            //     //Destructuring los queries de la URL
-            //     const { limit } = queryObj
-            // } else {
-            //     throw new Error('Debe agregar un parametro!');
-            // }
             if(fs.existsSync(path))
             {
                 //1. Leer el archivo
