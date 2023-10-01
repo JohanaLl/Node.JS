@@ -1,5 +1,5 @@
-import { Router } from "express";
-import { productManager } from "../ProductManagerFile.js";
+import { Router, json } from "express";
+import { productManager } from "../ProductManager.js";
 
 const router = Router();
 
@@ -7,6 +7,9 @@ const router = Router();
 router.get("/", async (req, res) => {
     try {
         const products = await productManager.getProducts(req.query);
+        if (!products.length) {
+            return res.status(200),json({ message: "No products" })
+        }
         res.status(200).json({ message: "Products found ", products});
     } catch (error) {
         res.status(500).json({ message: error.message });
@@ -14,12 +17,12 @@ router.get("/", async (req, res) => {
 });
 
 //Get products by id
-router.get("/:pid", async (req, res) => {
-    const { pid } = req.params;
+router.get("/:idProduct", async (req, res) => {
+    const { idProduct } = req.params;
     try {
-        const product = await productManager.getProductById(+pid);
+        const product = await productManager.getProductById(+idProduct);
         if (!product) {
-            return res.status(404).json({ message: "Product not foun with id provided" });            
+            return res.status(404).json({ message: "Product not found with id provided" });            
         }
         res.status(200).json({ message: "Procut found", product });
     } catch (error) {
@@ -30,26 +33,27 @@ router.get("/:pid", async (req, res) => {
 //Create a product
 router.post("/", async (req, res) => {
     //required params in body
-    const { title, description, code, price, status, stock, category } = req.body;
-    if (!title || !description || !code || !price || !status || !stock || !category) {
+    const { title, description, code, price, stock, category } = req.body;
+    if (!title || !description || !code || !price || !stock || !category) {
         return res.status(400).json({ message: "Some data is missing" });
     }
     try {
         const response = await productManager.addProduct(req.body);
-        res.status(200).json({ message: "Product created", user: response });
+        res.status(200).json({ message: "Product created", product: response });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 })
 
 //Delete a product
-router.delete("/:pid", async (req, res) => {
-    const { pid } = req.params;
+router.delete("/:idPRoduct", async (req, res) => {
+    const { idPRoduct } = req.params;
     try {
-        const response = await productManager.deleteProduct(+pid);
-        if (!response) {
+        const product = await productManager.getProductById(+idPRoduct);
+        if (!product) {
             return res.status(404).json({ message: "Product not found with the id provided" })
         }
+        await productManager.deleteProduct(+idPRoduct);
         res.status(200).json({ message: "Product deleted"});
     } catch (error) {
         res.status(500).json({ message: error.message});
@@ -57,13 +61,14 @@ router.delete("/:pid", async (req, res) => {
 });
 
 //Update a producto
-router.put("/:pid", async (req, res) => {
-    const { pid } = req.params;
+router.put("/:idPRoduct", async (req, res) => {
+    const { idPRoduct } = req.params;
     try {
-        const response = await productManager.updateProduct(+pid, req.body);
-        if (!response) {
+        const product = await productManager.getProductById(+idPRoduct);
+        if (!product) {
             return res.status(404).json({ message: "Product not found with the id provided" })
         }
+        await productManager.updateProduct(+idPRoduct, req.body);
         res.status(200).json({ message: "Product updated"});
     } catch (error) {
         res.status(500).json({ message: error.message});
