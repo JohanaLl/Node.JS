@@ -3,10 +3,14 @@ import express from 'express'
 import usersRouter from './routes/users.router.js'
 import productsRouter from './routes/products.router.js'
 import ordersRouter from './routes/orders.router.js'
+import { __dirname } from './utils.js'
 
-const app = express()
+const app = express(); 
 //Metodo que entiende la información que llega por el body
 app.use(express.json())
+//middleware para setear para que la carpeta public sea de libre acceso
+//__dirname ayuda a crear la ruta absoluta
+app.use(express.static(__dirname + "/public"))
 
 //router
 //Users

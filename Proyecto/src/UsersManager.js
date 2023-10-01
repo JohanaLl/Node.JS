@@ -5,7 +5,7 @@ const path = 'Users.json'
 
 class UsersManager {
 
-    async getUsers(queryObj) {
+        async getUsers(queryObj) {
         console.log('queryObj ', queryObj);
                 //Destructuring los queries de la URL
                 const { limit } = queryObj
