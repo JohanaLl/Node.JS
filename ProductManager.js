@@ -18,15 +18,17 @@ class ProductManager {
 
     addProduct(product) {
         const {
-            title,
-            description,
-            price,
-            thumbanil,
-            code,
-            stock
+            title, 
+            description, 
+            code, 
+            price, 
+            status = true,
+            stock,
+            category,
+            thumbnails = []
         } =  product
 
-        if (!title || !price || !stock || !code) {
+        if (!title || !description || !code || !price || !status || !stock || !category) {
             console.log('Some data is missing')
             return
         }
@@ -55,17 +57,21 @@ const product1 = new ProductManager()
 product1.addProduct({
     title:'Manzana', 
     description:'Manzana roja', 
-    price: 2000, 
-    thumbanil:'Path', 
     code:123456, 
-    stock:10})
+    price: 2000, 
+    status: true,
+    stock:10,
+    category: 'Frutas',
+    thumbnails: []  })
 product1.addProduct({
     title:'Pera', 
     description:'Pera', 
-    price:2000, 
-    thumbanil: 'Path', 
-    code: 123457, 
-    stock:10})
+    code:123456, 
+    price: 2000, 
+    status: true,
+    stock:10,
+    category: 'Frutas',
+    thumbnails: []  })
 // product1.addProduct('Banano', 'Banano', 2000, 'Path', 123458, 20)
 // product1.addProduct('Durazno', 'Durazno', 2000, 'Path', 123456, 10)
 

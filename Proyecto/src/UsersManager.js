@@ -16,9 +16,9 @@ class UsersManager {
                 const usersFile = await fs.promises.readFile(path, 'utf-8')
                 const userData = JSON.parse(usersFile);
                 //2. retornar el objeto/array js
-                //Retorna el limite que le llegó por propiedades
-                //slice permite quedarse con una porción del array 
-                //Va de un elemento a otro sin incluirlo
+                /**.slice() crea una copia superficial (shallow copy) de una porción de un array. 
+                *  No modifica el array original, sino que devuelve una copia de los elementos seleccionados en un nuevo array.
+                */
                 return limit ? userData.slice(0, +limit) : userData
             } else {
                 return []

@@ -86,28 +86,34 @@ class ProductManager {
 const product1 = {
     title:'Manzana', 
     description:'Manzana roja', 
-    price: 2000, 
-    thumbanil:'PathImage', 
     code:123456, 
-    stock:10
+    price: 2000, 
+    status: true,
+    stock:10,
+    category: 'Frutas',
+    thumbnails: [] 
 }
 
 const product2 = {
     title:'Pera', 
     description:'Pera', 
-    price:2000, 
-    thumbanil: 'Path', 
-    code: 123457, 
-    stock:10
+    code:123456, 
+    price: 2000, 
+    status: true,
+    stock:10,
+    category: 'Frutas',
+    thumbnails: [] 
 }
 
 const product3 = {
-    title:'Manzana', 
-    description:'Manzana pecoso', 
-    price:800, 
-    thumbanil: 'Path', 
-    code: 123459, 
-    stock:10
+    title:'Banano', 
+    description:'Banano', 
+    code:123456, 
+    price: 2000, 
+    status: true,
+    stock:10,
+    category: 'Frutas',
+    thumbnails: []  
 }
 
 // async function test() {
