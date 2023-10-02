@@ -2,7 +2,7 @@ const fs = require('fs')
 
 const path = 'Products.json'
 
-class ProductManager {
+class ProductsManager {
 
     async getProducts() {
         try {
@@ -108,7 +108,7 @@ const product3 = {
 }
 
 async function test() {
-    const product = new ProductManager()
+    const product = new ProductsManager()
     // await product.addProduct(product1)
     // await product.addProduct(product2)
     // const anyProduct = await product.getProductById(6)

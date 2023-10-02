@@ -80,6 +80,23 @@ router.put("/:idUser", async(req, res) => {
     } 
 });
 
+//Verifica los datos que vienen del usuario si son correctos lo crea y redirecciona
+router.post("/signup", async (req, res) => {
+    //Validar los campos obligatorios
+    const { first_name, last_name, email, password } = req.body
+    if (!first_name || !last_name || !email || !password) {
+        return res.status(400)
+            .json({ message: "Some data is missing" })
+    } 
+    try {
+        const response = await manager.createUser(req.body)
+        res.redirect(`/api/views/user/${response.id}`)
+    } catch (error) {
+        return res.status(500).json({ message:  error.message })
+    }
+})
+
+
 //Siempre que se exporte algo por default
 //donde se importe se le puede dar el nombre que uno quiera
 export default router;

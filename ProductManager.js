@@ -1,4 +1,4 @@
-class ProductManager {
+class ProductsManager {
 
     constructor() {
         this.products = []
@@ -53,7 +53,7 @@ class ProductManager {
 
 }
 
-const product1 = new ProductManager()
+const product1 = new ProductsManager()
 product1.addProduct({
     title:'Manzana', 
     description:'Manzana roja', 

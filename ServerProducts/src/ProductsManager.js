@@ -2,7 +2,7 @@ import { existsSync, promises } from 'fs'
 
 const path = 'Products.json'
 
-class ProductManager {
+class ProductsManager {
 //No se usa fs. porque se importó promises de fs 
     async getProducts(queryObj = {}) {
         const { limit } = queryObj;
@@ -117,7 +117,7 @@ const product3 = {
 }
 
 // async function test() {
-//     const product = new ProductManager()
+//     const product = new ProductsManager()
 //     await product.addProduct(product1)
 //     await product.addProduct(product2)
 //     const anyProduct = await product.getProductById(6)
@@ -130,4 +130,4 @@ const product3 = {
 
 // test() 
 
-export const productManager = new ProductManager();
+export const productsManager = new ProductsManager();

@@ -57,7 +57,7 @@ class UsersManager {
             console.log('users ', users);
             const user = users.find(u => u.id === id)
             if (!user) {
-                return 'No user'
+                return null
             } else {
                 return user
             }

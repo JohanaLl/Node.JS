@@ -1,5 +1,5 @@
 import { existsSync, promises } from 'fs'
-import { productManager } from './ProductManager.js'
+import { productsManager } from './ProductsManager.js'
 
 const path = 'Carts.json';
 
@@ -59,12 +59,14 @@ class CartManager {
                 throw new Error('There is no cart with this id');
             }
             //Validar que el producto exista
-            const product = await productManager.getProductById(idProduct);
+            const product = await productsManager.getProductById(idProduct);
             if (!product) {
                 throw new Error('There is no product with this id');
             }
             //Verificar si el producto existe en el arreglo de productos del carrito
-            const productIndex = cart.products.findIndex(p => p.id === idProduct)
+            const productIndex = cart.products.findIndex(
+                p => p.product === idProduct
+            );
             if (productIndex === -1) {
                 //Si no existe el producto se agrega
                 const newProduct = { product: idProduct, quantity: 1}
