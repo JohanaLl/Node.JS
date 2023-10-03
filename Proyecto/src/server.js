@@ -9,6 +9,7 @@ import { engine } from "express-handlebars"
 
 const app = express(); 
 //Metodo que entiende la información que llega por el body
+//app.use(express.json()) es un middleware a nivel de aplicación
 app.use(express.json())
 //Propiedad para recibir los valores de un formulario
 app.use(express.urlencoded({ extended: true }))
@@ -22,6 +23,7 @@ app.set("view engine", "handlebars");
 
 //routes
 //views
+//middleware a nivel de router, es decir solo se ejecuta para un router en particular
 app.use('/api/views', viewsRouter);
 //Users
 // req => params - query - body
