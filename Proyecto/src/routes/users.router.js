@@ -1,8 +1,10 @@
 import { Router } from 'express';
 import { manager } from '../UsersManager.js';
+import { authMiddleware } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
+//Middleware a nivel de endpoint, solo se ejecuta para una ruta particular
 router.get('/', async (req,res) => {
     try {
         const users = await manager.getUsers(req.query)
@@ -32,7 +34,7 @@ router.get('/:id', async(req, res) => {
     
 })
 
-router.post("/", async (req, res) => {
+router.post("/", authMiddleware, async (req, res) => {
     console.log(req.body);
     //Validar los campos obligatorios
     const { first_name, course, password } = req.body
