@@ -8,7 +8,7 @@ router.get("/", async (req, res) => {
     try {
         const products = await productsManager.getProducts(req.query);
         if (!products.length) {
-            return res.status(200),json({ message: "No products" })
+            return res.status(200).json({ message: "No products" })
         }
         res.status(200).json({ message: "Products found ", products});
     } catch (error) {

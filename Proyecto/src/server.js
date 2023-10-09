@@ -6,6 +6,7 @@ import ordersRouter from './routes/orders.router.js'
 import viewsRouter from './routes/views.router.js'
 import { __dirname } from './utils.js'
 import { engine } from "express-handlebars"
+import { Server } from 'socket.io'
 
 const app = express(); 
 //Metodo que entiende la información que llega por el body
@@ -18,7 +19,10 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.static(__dirname + "/public"))
 // handlebras
 app.engine("handlebars", engine());
+//setean los valores de las configuraciones de handlebars
+//ruta de las vistas
 app.set("views", __dirname + "/views");
+//nomnbre del motor de plantilla con el que se trabaja
 app.set("view engine", "handlebars");
 
 //routes
@@ -32,7 +36,28 @@ app.use('/api/users', usersRouter)
 app.use('/api/products', productsRouter)
 //Orders
 app.use('/api/orders', ordersRouter)
+//Socket io
+app.use('/api/views', viewsRouter);
 
-app.listen(8080, () => {
+//Servidor que trabaja con http
+const httpServer = app.listen(8080, () => {
     console.log('Escuchando al puerto 8080');
 });
+//webSocket
+const socketServer = new Server(httpServer);
+
+//connection - disconnect -- eventos por defecto
+socketServer.on('connection', socket => {
+    // console.log(`Cliente conectado: ${socket.id}`);
+    socket.on('disconnect', () => {
+        console.log(`Cliente desconectado: ${socket.id}`);
+    });
+    //emitir evento cuando el cliente se conecta
+    // socket.emit('welcome', 'Welcome to websocket');
+    socket.on('newPrice', (value) => {
+        console.log(value);
+        // socket.emit('PriceUpdate', value)  // Emite al cliente implecado
+        // socketServer.emit('PriceUpdate', value)  //Emite a todos los clientes
+        socket.broadcast.emit('PriceUpdate', value)  //Emite a todos menos al implecado
+    })
+})

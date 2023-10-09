@@ -21,6 +21,7 @@ class ProductsManager {
 
     async addProduct(product) {
         try {
+            console.log("newProduct addMethod ", product);
             const products = await this.getProducts()
             let id
             //Incrementar el id
@@ -28,6 +29,7 @@ class ProductsManager {
 
             const newProduct = { id, ...product, status: true }
             products.push(newProduct)
+            console.log("arr products ", products);
             await promises.writeFile(path, JSON.stringify(products))
             return newProduct
         } catch (error) {

@@ -55,4 +55,8 @@ router.get('/user/:idUser', async ( req, res) => {
 
 })
 
+router.get('/', (req, res) => {
+    res.render("websocket")
+})
+
 export default router;

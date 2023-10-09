@@ -1,0 +1,21 @@
+<h1>Agregar producto</h1>
+<form id="form-realtimeAdd">
+    Title:<input type="text" class="text" id="title">
+    Description:<input type="text" class="text" id="description">
+    Code:<input type="text" class="text" id="code">
+    Price:<input type="text" class="text" id="price">
+    Stock:<input type="text" class="text" id="stock">
+    Category:<input type="text" class="text" id="category">
+    <input type="submit" value="Agregar">
+</form>
+
+<h1>Eliminar producto</h1>
+<form id="form-realtimeDelete">
+    Id:<input type="text" class="text" id="product-delete">
+    <input type="submit" value="Eliminar">
+</form>
+
+<div id="products-realtime"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realTimeProducts.js"></script>

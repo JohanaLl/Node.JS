@@ -53,31 +53,33 @@ class CartManager {
     //Agregar un producto al carrito
     async addProductToCart(idCart, idProduct) {
         try {
+            //Lista de carritos
             const carts = await this.getCarts()
             //Validar que el carrito exista
             const cart = await this.getCartById(idCart);
             if (!cart) {
                 throw new Error('There is no cart with this id');
             }
+
             //Validar que el producto exista
             const product = await productsManager.getProductById(idProduct);
             if (!product) {
                 throw new Error('There is no product with this id');
             }
+            //index del carrito al que se van a agregar productos
             const cartIndex = carts.findIndex(c=>c.id === idCart)
-            //Verificar si el producto existe en el arreglo de productos del carrito
-            const productIndex = cart.products.findIndex(
+            //en el carrito en el arreglo de productos busque si el producto existe
+            const productIndex = carts[cartIndex].products.findIndex(
                 p => p.product === idProduct
             );
             if (productIndex === -1) {
                 //Si no existe el producto se agrega
                 const newProduct = { product: idProduct, quantity: 1}
-                cart.products.push(newProduct)
+                carts[cartIndex].products.push(newProduct)
             } else {
                 //Si existe el producto se aumenta la cantidad
-                cart.products[productIndex].quantity++;
+                carts[cartIndex].products[productIndex].quantity++;
             }
-            carts[cartIndex] = { ...carts[cartIndex], ...cart, idCart }
             await promises.writeFile(path, JSON.stringify(carts));
             return cart
         } catch (error) {
