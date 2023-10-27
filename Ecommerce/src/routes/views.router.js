@@ -1,12 +1,16 @@
 import { Router } from "express";
-import { usersManager } from "../managers/usersManager.js";
-import { productManager } from "../managers/productManager.js";
+import { usersManager } from "../dao/managers/usersManager.js";
+import { productManager } from "../dao/managers/productManager.js";
 
 const router = Router();
 
 router.get("/signup", (req, res) => {
     res.render("signup");
 });
+
+router.get("/chat", (req, res) => {
+    res.render("chat");
+})
 
 router.get("/home/:idUser", async (req, res) => {
     const { idUser } = req.params;
