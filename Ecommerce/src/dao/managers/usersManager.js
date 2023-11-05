@@ -7,8 +7,14 @@ class UsersManager {
         return response;
     }
 
+    //.explain retorna la explicación de  las estadisticas de la ejecuón de la petición
     async findById(id) {
-        const response = await usersModel.findById(id)
+        const response = await usersModel.findById(id).explain('executionStats');
+        return response;
+    }
+
+    async findBEmail(email) {
+        const response = await usersModel.findOne({ email });
         return response;
     }
 

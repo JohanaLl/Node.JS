@@ -22,6 +22,16 @@ router.get("/:idUser", async (req, res) => {
     }
 });
 
+router.get("/:email", async (req, res) => {
+    const { idUser } = req.params;
+    try {
+        const user = await usersManager.findById(email);
+        res.status(200).json({ message: "User: ", user })
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+});
+
 router.get("/:idUser", async (req, res) => {
     const { idUser } = req.params;
     try {
