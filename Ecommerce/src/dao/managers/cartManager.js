@@ -12,7 +12,11 @@ class CartManager {
 
     //Buscar un carrito por id
     async findById(idCart) {
-        const response = await cartModel.findById(idCart);
+        const response = await cartModel.findById(idCart)
+                //toda la información
+                .populate('products.product');
+                //informacion en particular
+                // .populate('products.product', ['title', 'price']);
         return response;
     }
 
@@ -30,7 +34,8 @@ class CartManager {
                 throw new Error('There is no product with this id');
             }
 
-            const productIndex = cart.products.findIndex( (p) => p.product.equals(idProduct));
+            const productIndex = cart.products.findIndex( 
+                (p) => p.product.equals(idProduct));
 
             if (productIndex === -1) {
                 cart.products.push({ product: idProduct, quantity: 1 });
