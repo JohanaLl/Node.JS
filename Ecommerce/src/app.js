@@ -2,6 +2,7 @@ import express from "express";
 import productRouter from './routes/product.router.js';
 import cartRouter from './routes/cart.router.js';
 import usersRouter from './routes/users.router.js';
+import clientRouter from './routes/client.router.js';
 import viewsRouter from './routes/views.router.js';
 import { messagesManager } from './dao/managers/messagesManager.js'
 import { engine } from "express-handlebars"
@@ -25,6 +26,7 @@ app.set("view engine", "handlebars");
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/users", usersRouter);
+app.use('/api/clients', clientRouter);
 app.use("/", viewsRouter)
 
 const PORT = 8080

@@ -3,9 +3,18 @@ import { usersManager } from "../dao/managers/usersManager.js";
 
 const router = Router();
 
+// router.get("/", async (req, res) => {
+//     try {
+//         const users = await usersManager.findAggre();
+//         res.status(200).json({ message: "Users", users })
+//     } catch (error) {
+//         res.status(500).json({ message: error.message })
+//     }
+// });
+
 router.get("/", async (req, res) => {
     try {
-        const users = await usersManager.findAll();
+        const users = await usersManager.findAll(req.query);
         res.status(200).json({ message: "Users", users })
     } catch (error) {
         res.status(500).json({ message: error.message })

@@ -1,7 +1,6 @@
 import { Schema, model } from "mongoose";
-import mongoosePaginate from "mongoose-paginate-v2"
 
-const usersSchema = new Schema({
+const clientSchema = new Schema({
     first_name: {
         type:String,
         required:true
@@ -15,19 +14,14 @@ const usersSchema = new Schema({
         required:true,
         index: true
     },
-    password: {
+    gender: {
         type:String,
         required:true
     },
-    age: {
-        type:Number
-    },
-    isSingle: {
-        type:Boolean,
-        default:false
+    calification: {
+        type:Number,
+        required: true,
     }
 })
 
-usersSchema.plugin(mongoosePaginate);
-
-export const usersModel = model('Users', usersSchema)
+export const clientModel = model('Client', clientSchema)
