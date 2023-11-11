@@ -5,13 +5,37 @@ import { engine } from "express-handlebars";
 import viewsRouter from "./routes/views.router.js";
 import cookieRouter from "./routes/cookie.router.js";
 import session from "express-session";
+import fileStore  from "session-file-store";
+import MongoStore from "connect-mongo";
+import "./db/configDB.js";
 
 const app = express();
+const FileStore = fileStore(session);
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser("SecretCookie"));
-app.use(session({ secret: 'keyboard cat', cookie: { maxAge: 60000 }}));
+
+//session
+//file
+// app.use(session({ 
+//     store: new FileStore({
+//         path: __dirname + "/session"
+//     }),
+//     secret: 'secretSession', 
+//     cookie: { maxAge: 60000 }
+// }));
+
+//mongo
+const URI =  "mongodb+srv://lllanosc1:yx8JIfL7zakMi2Xk@cluster0.zzetdhr.mongodb.net/sessionDB?retryWrites=true&w=majority"; 
+app.use(session({ 
+    store: new MongoStore({
+        mongoUrl: URI,
+    }),
+    secret: 'secretSession', 
+    cookie: { maxAge: 60000 }
+}));
+
 
 //handlebars
 app.engine('handlebars', engine());

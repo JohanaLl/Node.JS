@@ -11,6 +11,7 @@ const router = Router();
 //Session
 router.post('/', (req, res) => {
     const { name, email } = req.body;
+    //crear session
     req.session.name = name;
     req.session.email = email;
     res.send("session");
