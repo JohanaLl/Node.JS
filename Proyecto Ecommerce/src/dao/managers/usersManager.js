@@ -2,21 +2,26 @@ import { usersModel } from "../db/models/users.model.js";
 
 class UsersManager {
 
-    async findAll(obj) {
-        const { limit = 20, page = 1, ...filter } = obj;
-        const response = await usersModel.paginate(filter, { limit, page });
-        const info = {
-            count: response.totalDocs,
-            pages: response.totalPages,
-            next: response.hasNextPage
-              ? `http://localhost:8080/api/users?page=${response.nextPage}`
-              : null,
-            prev: response.hasPrevPage
-              ? `http://localhost:8080/api/users?page=${response.prevPage}`
-              : null,
-        };
-        const results = response.docs;
-        return { info, results };
+    // async findAll(obj) {
+    //     const { limit = 20, page = 1, ...filter } = obj;
+    //     const response = await usersModel.paginate(filter, { limit, page });
+    //     const info = {
+    //         count: response.totalDocs,
+    //         pages: response.totalPages,
+    //         next: response.hasNextPage
+    //           ? `http://localhost:8080/api/users?page=${response.nextPage}`
+    //           : null,
+    //         prev: response.hasPrevPage
+    //           ? `http://localhost:8080/api/users?page=${response.prevPage}`
+    //           : null,
+    //     };
+    //     const results = response.docs;
+    //     return { info, results };
+    // }
+
+    async findAll() {
+        const response = await usersModel.find();
+        return response;
     }
 
     //.explain retorna la explicación de  las estadisticas de la ejecuón de la petición
