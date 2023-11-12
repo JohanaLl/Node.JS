@@ -28,4 +28,8 @@ router.get("/profile", (req, res) => {
     console.log(req.session);
 })
 
+router.get("/restaurar", (req, res) => {
+    res.render("restaurar");
+})
+
 export default router;
