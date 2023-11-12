@@ -1,4 +1,4 @@
-import { userModel } from "../db/models/users.model";
+import { userModel } from "../db/models/users.model.js";
 
 class UsersManager {
     async findById(id) {

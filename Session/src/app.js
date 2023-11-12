@@ -4,6 +4,7 @@ import { __dirname } from "./utils.js";
 import { engine } from "express-handlebars";
 import viewsRouter from "./routes/views.router.js";
 import cookieRouter from "./routes/cookie.router.js";
+import sessionRouter from "./routes/session.router.js";
 import session from "express-session";
 import fileStore  from "session-file-store";
 import MongoStore from "connect-mongo";
@@ -44,6 +45,7 @@ app.set("view engine", 'handlebars');
 
 app.use("/", viewsRouter);
 app.use("/api/cookie", cookieRouter);
+app.use("/api/session", sessionRouter);
 
 app.get("/crear", (req, res) => {
     //Tiempo de vida de la cookie maxAge
