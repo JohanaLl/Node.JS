@@ -7,6 +7,7 @@ class UsersManager {
     }
 
     async findByEmail(email) {
+        console.log('findByEmail');
         const response = await userModel.findOne({ email });
         return response;
     }

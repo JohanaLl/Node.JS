@@ -5,8 +5,23 @@ import { productManager } from "../dao/managers/productManager.js";
 const router = Router();
 
 router.get("/signup", (req, res) => {
+    if (req.session.user) {
+        return res.redirect("/products")
+    }
     res.render("signup");
 });
+
+router.get("/login", (req, res) => {
+    if (req.session.user) {
+        return res.redirect("/products")
+    }
+    res.render("login");
+});
+
+router.get("/restaurar", (req, res) => {
+    console.log('view restaurar');
+    res.render("restaurar");
+})
 
 router.get("/chat", (req, res) => {
     res.render("chat");
@@ -21,10 +36,17 @@ router.get("/home/:idUser", async (req, res) => {
 })
 
 router.get("/products", async(req, res)=>{
+    if (!req.session.user) {
+        return res.redirect("/login");
+    }
+    const user = req.session.user
     const products = await productManager.findAll(req.query);
-    const cleanData = JSON.parse(JSON.stringify(products));   
-    console.log(cleanData); 
-    res.render("products", cleanData);
+    const cleanData = JSON.parse(JSON.stringify(products));  
+    console.log('user pro ', user); 
+    res.render("products", { products: cleanData, user: user});
 })
 
+router.get('/error', (req, res) => {
+    res.render("error");
+})
 export default router

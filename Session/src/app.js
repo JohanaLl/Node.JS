@@ -8,7 +8,10 @@ import sessionRouter from "./routes/session.router.js";
 import session from "express-session";
 import fileStore  from "session-file-store";
 import MongoStore from "connect-mongo";
+import passport from "passport";
 import "./db/configDB.js";
+import "./passport.js";
+
 
 const app = express();
 const FileStore = fileStore(session);
@@ -36,6 +39,10 @@ app.use(session({
     secret: 'secretSession', 
     cookie: { maxAge: 60000 }
 }));
+
+//passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 //handlebars

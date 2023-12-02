@@ -3,11 +3,11 @@ import { model, Schema } from "mongoose"
 const userSchema = new Schema({
     first_name: {
         type: String,
-        require: true
+        required: true
     },
     last_name: {
         type: String,
-        require: true
+        required: true
     },
     email: {
         type: String,
@@ -16,8 +16,12 @@ const userSchema = new Schema({
     },
     password: {
         type: String,
-        require: true
-    } 
+        required:true
+    },
+    isGithub: {
+        type: Boolean,
+        default: false,
+    }
 });
 
 export const userModel = model("Users", userSchema);

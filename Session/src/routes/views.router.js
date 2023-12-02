@@ -21,15 +21,23 @@ router.get("/signup", (req, res) => {
 })
 
 router.get("/profile", (req, res) => {
-    if (!req.session.user) {
+    // console.log("profile");
+    // res.render("profile", {
+    //     user: { first_name: "", email: "" }
+    // })
+    if (!req.session.passport) {
         return res.redirect("/login");
     }
-    res.render("profile", { user: req.session.user});
-    console.log(req.session);
+    const { first_name, email } = req.user;
+    res.render("profile", { user: { first_name, email }});
 })
 
 router.get("/restaurar", (req, res) => {
     res.render("restaurar");
+})
+
+router.get('/error', (req, res) => {
+    res.render("error");
 })
 
 export default router;

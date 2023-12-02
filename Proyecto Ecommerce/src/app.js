@@ -2,12 +2,16 @@ import express from "express";
 import { engine } from "express-handlebars"
 import { __dirname } from "./utils.js";
 import { Server } from "socket.io";
+import session from "express-session";
+import MongoStore from "connect-mongo";
 
 import productRouter from './routes/product.router.js';
 import cartRouter from './routes/cart.router.js';
 import usersRouter from './routes/users.router.js';
 import clientRouter from './routes/client.router.js';
 import viewsRouter from './routes/views.router.js';
+import sessionRouter from './routes/session.router.js';
+
 import { messagesManager } from './dao/managers/messagesManager.js';
 
 //db connection
@@ -19,6 +23,16 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(__dirname + '/public'));
 
+//session
+const URI =  "mongodb+srv://lllanosc1:yx8JIfL7zakMi2Xk@cluster0.zzetdhr.mongodb.net/ecommerce?retryWrites=true&w=majority";
+app.use(session({ 
+    store: new MongoStore({
+        mongoUrl: URI,
+    }),
+    secret: 'secretSession', 
+    cookie: { maxAge: 60000 }
+}));
+
 //handlebars
 app.engine('handlebars', engine());
 app.set('views', __dirname + '/views');
@@ -29,7 +43,9 @@ app.use("/api/users", usersRouter);
 app.use('/api/clients', clientRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts", cartRouter);
+app.use("/api/session", sessionRouter);
 app.use("/", viewsRouter);
+
 
 const PORT = 8080;
 const httpServer = app.listen(PORT, () => {
