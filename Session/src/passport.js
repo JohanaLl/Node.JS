@@ -2,6 +2,7 @@ import passport from "passport";
 import { userManager } from "./managers/users.manager.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { compareData, hashData } from "./utils.js";
 
 //local
@@ -70,10 +71,7 @@ passport.use(
         }, 
         async (accessToken, refreshToken, profile, done) =>{
             try {
-                console.log(profile);
-                console.log('email ', `${profile._json.login.toLowerCase()}@gmail.com`);
                 const userDB = await userManager.findByEmail(`${profile._json.login.toLowerCase()}@gmail.com`);
-                console.log('userDB ', userDB);
                 //login
                 if (userDB) {
                     if (userDB.isGithub) {
@@ -90,7 +88,6 @@ passport.use(
                     password: " ",
                     isGithub: true
                 };
-                console.log('infoUser ', infoUser);
                 const createUser = await userManager.createOne(infoUser);
                 done(null, createUser);
             } catch (error) {
@@ -101,17 +98,38 @@ passport.use(
 );
 
 //google
-// passport.use(new GoogleStrategy({
-//     clientID: GOOGLE_CLIENT_ID,
-//     clientSecret: GOOGLE_CLIENT_SECRET,
-//     callbackURL: "http://www.example.com/auth/google/callback"
-//   },
-//   async function(accessToken, refreshToken, profile, done) {
-//     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-//       return done(err, user);
-//     });
-//   }
-// ));
+passport.use('google', new GoogleStrategy({
+    clientID: "104583531490-5inihd9uefc145fcdr85nl6kaefel5o0.apps.googleusercontent.com",
+    clientSecret: "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",
+    callbackURL: "http://localhost:8080/api/session/auth/google/callback"
+  },
+  async function(accessToken, refreshToken, profile, done) {
+    console.log(profile);
+    try {
+        const userDB = await userManager.findByEmail(profile._json.email);
+        //login
+        if (userDB) {
+            if (userDB.isGoogle) {
+                return done(null, userDB);
+            } else {
+                return done(null, false);
+            }
+        }
+        //signup
+        const infoUser = {
+            first_name: profile._json.given_name,
+            last_name: profile._json.family_name,
+            email: profile._json.email,
+            password: " ",
+            isGoogle: true
+        };
+        const createUser = await userManager.createOne(infoUser);
+        done(null, createUser);
+    } catch (error) {
+        done(error)
+    }
+  }
+));
 
 passport.serializeUser((user, done) => {
       return done(null, user.id);

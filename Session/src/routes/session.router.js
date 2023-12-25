@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { userManager } from "../managers/users.manager.js";
-import { compareData, hashData } from "../utils.js";
+import { hashData } from "../utils.js";
 import passport from "passport";
 
 const router = Router();
@@ -80,6 +80,17 @@ router.get(
   router.get("/callback", passport.authenticate("github"), (req, res) => {
     res.send("Probando");
   });
+
+//SIGNUP - LOGIN - PASSPORT GOOGLE
+ router.get("/auth/google",
+  passport.authenticate("google", { scope: ["profile", "email"] }));
+
+  router.get("/auth/google/callback", 
+  passport.authenticate("google", { failureRedirect: "/error" }),
+  function(req, res) {
+    res.redirect("/profile");
+  });
+
 
 router.get("/destroy", async (req, res) => {
     req.session.destroy(() => {
