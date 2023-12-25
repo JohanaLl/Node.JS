@@ -3,6 +3,7 @@ import { compareData, hashData } from "../utils.js";
 import { usersManager } from "../dao/managers/usersManager.js";
 
 const router = new Router();
+import passport from "passport";
 
 router.post('/signup', async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
@@ -73,5 +74,37 @@ router.get('/logout', async (req, res) => {
         res.redirect('/login');
     })
 })
+
+//SIGNUP - LOGIN - PASSPORT GITHUB
+router.get(
+    "/auth/github",
+    passport.authenticate("github", { scope: ["user:email"] })
+);
+
+router.get("/callback", passport.authenticate("github"), (req, res) => {
+    res.send("Probando");
+});
+
+router.get("/destroy", async (req, res) => {
+    req.session.destroy(() => {
+        res.redirect("/login");
+    })
+});
+
+router.post("/restaurar", async (req, res) => {
+    const { email, password } = req.body;
+    try {
+        const user = await userManager.findByEmail(email);
+        if (!user) {
+            return res.redirect("/login");
+        } 
+        const hashedPassword = await hashData(password)
+        user.password = hashedPassword;
+        await user.save();
+        res.status(200).json({ message: "Password update"});
+    } catch (error) {
+        res.status(500).json({ error });
+    }
+});
 
 export default router;

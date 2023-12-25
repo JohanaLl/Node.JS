@@ -25,6 +25,10 @@ const usersSchema = new Schema({
     isSingle: {
         type:Boolean,
         default:false
+    },
+    isGithub: {
+        type: Boolean,
+        default: false,
     }
 })
 
