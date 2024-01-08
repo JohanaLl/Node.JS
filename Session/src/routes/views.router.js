@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { jwtValidation } from "../middlewares/jwt.middleware.js";
 
 const router = Router();
 
@@ -32,7 +33,7 @@ router.get("/profile", (req, res) => {
     res.render("profile", { user: { first_name, email }});
 })
 
-router.get("/restaurar", (req, res) => {
+router.get("/restaurar", jwtValidation, (req, res) => {
     res.render("restaurar");
 })
 

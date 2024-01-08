@@ -49,4 +49,12 @@ router.get("/products", async(req, res)=>{
 router.get('/error', (req, res) => {
     res.render("error");
 })
+
+router.get("/profile", (req, res) => {
+    if (!req.session.passport) {
+        return res.redirect("/login");
+    }
+    const { first_name, email } = req.user;
+    res.render("profile", { user: { first_name, email }});
+})
 export default router

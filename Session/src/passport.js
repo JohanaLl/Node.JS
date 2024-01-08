@@ -3,11 +3,11 @@ import { userManager } from "./managers/users.manager.js";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Strategy as GithubStrategy } from "passport-github2";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { ExtractJwt, Strategy as JWTStrategy } from "passport-jwt";
 import { compareData, hashData } from "./utils.js";
 
 //local
-passport.use(
-    'signup', 
+passport.use('signup', 
     new LocalStrategy(
         //request passReqToCallback: true 
         //=> de esta forma passport le pasa el obj req a esta función
@@ -29,8 +29,7 @@ passport.use(
         }
 }))
 
-passport.use(
-    "login",
+passport.use("login",
     new LocalStrategy(
       { usernameField: "email" },
       async (email, password, done) => {
@@ -61,8 +60,7 @@ passport.use(
 );
 
 //github
-passport.use(
-    'github', 
+passport.use('github', 
     new GithubStrategy(
         {
             clientID: "Iv1.e612a63cdcfa9ef7",
@@ -130,6 +128,16 @@ passport.use('google', new GoogleStrategy({
     }
   }
 ));
+
+//JWT
+passport.use('jwt', 
+    new JWTStrategy(
+        {
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: "secretJWT",
+        }, async function (jwt_payload, done) {
+    done(null, jwt_payload);
+}))
 
 passport.serializeUser((user, done) => {
       return done(null, user.id);

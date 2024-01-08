@@ -25,6 +25,11 @@ const userSchema = new Schema({
     isGoogle: {
         type: Boolean,
         default: false,
+    },
+    role: {
+        type: String,
+        enum: ["ADMIN", "PREMIUM", "CLIENT"],
+        default: "CLIENT",
     }
 });
 

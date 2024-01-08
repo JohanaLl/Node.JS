@@ -7,14 +7,16 @@ const router = Router();
 
 router.post('/signup', async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
+    console.log('signup: ', req.body);
     if (!first_name || !last_name || !email || !password) {
         return res.status(400).json({ message: "All fileds are required"})
     }
     try {
         const hashedPassword = await hashData(password);
         const createUser = await userManager.createOne({
-            ...req.body, 
-            password:hashedPassword
+            ...req.body,
+            password: hashedPassword,
+            role: "PREMIUM",
         });
         res.status(200).json({ message: "User created", user: createUser})
     } catch (error) {
@@ -46,9 +48,13 @@ router.post("/login", async (req, res) => {
         // res.redirect('/profile');
 
         //jwt
-        const { first_name, last_name } = user;
-        const token = generateToken({ first_name, last_name, email });
-        res.json({ message: "Token", token })
+        console.log("login ", req);
+        const { first_name, last_name, role } = user;
+        const token = generateToken({ first_name, last_name, email, role });
+        res.status(200)
+        .cookie("token", token, { httpOnly: true })
+        .json({ message: "Bienvenido", token})
+        // console.log(req);
     } catch (error) {
         res.status(500).json({ error });
     }
@@ -93,6 +99,7 @@ router.get(
   router.get("/auth/google/callback", 
   passport.authenticate("google", { failureRedirect: "/error" }),
   function(req, res) {
+    console.log(req);
     res.redirect("/profile");
   });
 
@@ -104,6 +111,7 @@ router.get("/destroy", async (req, res) => {
 })
 
 router.post("/restaurar", async (req, res) => {
+    console.log('ReqRestaurar: ', req);
     const { email, password } = req.body;
     try {
         const user = await userManager.findByEmail(email);

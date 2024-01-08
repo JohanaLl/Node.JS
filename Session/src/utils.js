@@ -5,6 +5,7 @@ import bcrypt from "bcrypt";
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 const SECRET_KEY_JWT = "secretJWT";
+
 export const hashData = async(data) => {
     return bcrypt.hash(data, 10);
 }
@@ -13,7 +14,7 @@ export const compareData = async(data, hashedData) => {
 }
 
 export const generateToken = (user) => {
-    const token = jwt.sign(user, SECRET_KEY_JWT, { expiresIn: 300 });
+    const token = jwt.sign(user, SECRET_KEY_JWT, { expiresIn: 60000 });
     console.log("token: ", token);
     return token;
 }

@@ -2,8 +2,8 @@ import passport from "passport";
 import { usersManager } from "./dao/managers/usersManager.js";
 import { Strategy as GithubStrategy } from "passport-github2";
 
-passport.use(
-    'github', 
+//GitHub
+passport.use('github', 
     new GithubStrategy(
         {
             clientID: "Iv1.e612a63cdcfa9ef7",
@@ -12,9 +12,15 @@ passport.use(
         }, 
         async (accessToken, refreshToken, profile, done) =>{
             try {
-                console.log(profile);
+                console.log(profile._json.email);
                 console.log('email ', `${profile._json.login.toLowerCase()}@gmail.com`);
-                const userDB = await usersManager.findByEmail(`${profile._json.login.toLowerCase()}@gmail.com`);
+                var email = "";
+                if (profile._json.email !== null) {
+                    email = profile._json.email;
+                } else {
+                    email = `${profile._json.login.toLowerCase()}@gmail.com`;
+                }
+                const userDB = await usersManager.findByEmail(email);
                 console.log('userDB ', userDB);
                 //login
                 if (userDB) {
@@ -41,6 +47,35 @@ passport.use(
         }
     )
 );
+
+// const fromCookies = (req) => {
+//     return req.cookies.token;
+// }
+
+//Generar Token
+// passport.use('jwt', new JWTStrategy({
+//     jwtFromRequest: ExtractJwt.fromExtractors([fromCookies]),
+//     secretOrKey: SECRETJWT,
+// }, (jwt_payload, done) => {
+//     done(null, jwt_payload);    
+// }))
+
+//Obtener usuario asociado a Token
+// passport.use('jwt-cookie', 
+//     new CustomStrategy({}, async (req, done) => {
+//         try {
+//             const token = req.cookies[req.cookies];
+//             if (!token) {
+//                 return done(null, false); // No token found
+//             }
+
+//             const payload = jwt.verify(token, "secretJWT"); // Usa tu secret key aquí
+//             const user = await findUser(payload);
+            
+//         } catch (error) {
+            
+//         }
+// }))
 
 passport.serializeUser((user, done) => {
     return done(null, user.id);

@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, SchemaTypes, model } from "mongoose";
 import mongoosePaginate from "mongoose-paginate-v2"
 
 const usersSchema = new Schema({
@@ -29,7 +29,21 @@ const usersSchema = new Schema({
     isGithub: {
         type: Boolean,
         default: false,
-    }
+    },
+    role: {
+        type: String,
+        enum: ["ADMIN", "PREMIUM", "CLIENT"],
+        default: "CLIENT",
+    },
+    cart: [
+    {
+        type: [{
+            type: SchemaTypes.ObjectId,
+            ref: 'Cart'
+        }],
+        _id: false,
+        default: [],
+    }]
 })
 
 usersSchema.plugin(mongoosePaginate);

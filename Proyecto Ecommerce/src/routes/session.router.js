@@ -1,21 +1,21 @@
 import { Router } from "express";
 import { compareData, hashData } from "../utils.js";
 import { usersManager } from "../dao/managers/usersManager.js";
+import passport from "passport";
 
 const router = new Router();
-import passport from "passport";
 
 router.post('/signup', async (req, res) => {
     const { first_name, last_name, email, password } = req.body;
     if (!first_name || !last_name || !email || !password) {
-        // return res.status(400).json({ message: "All fileds are required"})
-        return res.render('error', { error: 'All fileds are required' });
+        return res.status(400).json({ message: "All fileds are required"})
     }
     try {
         const hashedPassword = await hashData(password);
         const createUser = await usersManager.createOne({
             ...req.body, 
-            password:hashedPassword
+            password:hashedPassword,
+            role: 'ADMIN',
         });
         //guardar la session
         req.session.user = createUser;
@@ -28,8 +28,7 @@ router.post('/signup', async (req, res) => {
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
-        // return res.status(400).json({ message: "All fileds are required"})
-        return res.render('error', { error: 'All fileds are required' });
+        return res.status(400).json({ message: "All fileds are required"})
     }
     try {
         const user = await usersManager.findByEmail(email);
@@ -38,10 +37,9 @@ router.post('/login', async (req, res) => {
         } 
         const isPasswordValid = await compareData(password, user.password);
         if (!isPasswordValid) {
-            // return res.render('login', { error: 'Password is incorrect' });
-            return res.render('error', { error: 'Password is incorrect' });
+            return res.status(401).json({ message: "Info is not valid"});
         }
-        //rol
+        //session
         const sessionInfo = (email === 'adminCoder@coder.com' && password === 'adminCoder123') 
             ? { email, first_name: user.first_name, isAdmin: true }
             : { email, first_name: user.first_name, isAdmin: false };
@@ -49,7 +47,7 @@ router.post('/login', async (req, res) => {
         req.session.user = sessionInfo;
         res.redirect('/products');
     } catch (error) {
-        
+        res.status(500).json({ error });
     }
 });
 
